@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey
+from django.urls import reverse
 
 
 class Category(MPTTModel):
@@ -33,6 +34,7 @@ class Post(models.Model):
     author = models.ForeignKey(
         User, related_name='posts', on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
+    slug = models.SlugField(max_length=200, default='')
     image = models.ImageField(upload_to='articles/')
     text = models.TextField()
     category = models.ForeignKey(
@@ -46,6 +48,13 @@ class Post(models.Model):
     
     def __str__(self):
         return self.title
+    
+    def get_absolute_url(self):
+        return reverse("post_single", kwargs={"slug": self.category.slug, "post_slug":  self.slug})
+    
+    def get_recipes(self):
+        return self.recipes.all()
+
 
 
 class Recipe(models.Model):
@@ -57,7 +66,7 @@ class Recipe(models.Model):
     directions = models.TextField()
     post = models.ForeignKey(
         Post,
-        related_name='recipe',
+        related_name='recipes',
         on_delete=models.SET_NULL,
         null=True,
         blank=True

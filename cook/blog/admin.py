@@ -12,7 +12,7 @@ class RecipeInLine(admin.StackedInline):
 class PostAdmin(admin.ModelAdmin):
     list_display = ['title', 'author', 'category', 'create_at', 'id']
     inlines = [RecipeInLine]
-    
+
 
 @admin.register(models.Recipe)
 class RecipeAdmin(admin.ModelAdmin):
