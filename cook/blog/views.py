@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, TemplateView
 
 from blog.models import Post
 
@@ -15,6 +15,15 @@ class PostDetailView(DetailView):
     model = Post
     context_object_name = 'post'
     slug_url_kwarg = 'post_slug'
+    
+    
+class HomeView(TemplateView):
+    template_name = 'blog/home.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['post_list'] = Post.objects.all()[:9]
+        return context
 
 
 def home(request):
